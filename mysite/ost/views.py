@@ -15,3 +15,7 @@ def index(request):
 def new(request):
     return render(request, 'new.html')
 
+
+def resource(request):
+    return render(request, 'recourse.html')
+
