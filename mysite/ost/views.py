@@ -11,3 +11,7 @@ from django.http import HttpResponse
 def index(request):
     return render(request, 'landing.html')
 
+
+def new(request):
+    return render(request, 'new.html')
+
