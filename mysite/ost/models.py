@@ -17,6 +17,7 @@ class Resource(models.Model):
     start = models.CharField(max_length=10)
     end = models.CharField(max_length=10)
     tags = models.CharField(max_length=100)
+    last = models.DateTimeField()
 
 
 class Reservation(models.Model):

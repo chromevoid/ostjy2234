@@ -37,8 +37,16 @@ def new(request):
     return render(request, 'new.html')
 
 
-def resource(request):
-    return render(request, 'recourse.html')
+def resource(request, resource_id=None):
+    current_resource = get_object_or_404(Resource, pk=resource_id)
+    current_user = users.get_current_user()
+    show_edit = False
+    reservation_list = Reservation.objects.filter(
+        resource=current_resource,
+    )
+    if current_user == current_resource.owner:
+        show_edit = True
+    return render(request, 'resource.html')
 
 
 def create_resource(request):
@@ -50,5 +58,6 @@ def create_resource(request):
     new_resource.end = request.POST['end']
     new_resource.tags = request.POST['tags']
     new_resource.description = request.POST['description']
+    new_resource.last = datetime.datetime.now()
     new_resource.save()
     return render(request, 'new.html')
