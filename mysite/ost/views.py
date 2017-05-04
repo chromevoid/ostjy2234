@@ -41,6 +41,7 @@ def resource(request, resource_id=None):
     current_resource = get_object_or_404(Resource, pk=resource_id)
     my_resource = Resource.objects.filter(
         owner=users.get_current_user(),
+        pk=resource_id,
     )
     edit = False
     if len(my_resource) != 0:
