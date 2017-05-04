@@ -20,11 +20,11 @@ import re
 
 def index(request):
     my_reservation_list = Reservation.objects.filter(
-        owner=users.get_current_user(),
+        owner=users.get_current_user().user_id(),
     )
     resource_list = Resource.objects.all()
     my_resource_list = Resource.objects.filter(
-        owner=users.get_current_user(),
+        owner=users.get_current_user().user_id(),
     )
     return render(request, 'landing.html', {
         'my_reservation_list': my_reservation_list,
@@ -39,16 +39,13 @@ def new(request):
 
 def resource(request, resource_id=None):
     current_resource = get_object_or_404(Resource, pk=resource_id)
-    current_user = users.get_current_user()
-    show_edit = False
-    if current_user == current_resource.owner:
-        show_edit = True
+    current_user = users.get_current_user().user_id()
     reservation_list = Reservation.objects.filter(
         resource=current_resource,
     )
     return render(request, 'resource.html', {
         'current_resource': current_resource,
-        'show_edit': show_edit,
+        'current_user': current_user,
         'reservation_list': reservation_list,
     })
 
@@ -56,7 +53,7 @@ def resource(request, resource_id=None):
 def create_resource(request):
     new_resource = Resource()
     new_resource.created = datetime.datetime.now()
-    new_resource.owner = users.get_current_user()
+    new_resource.owner = users.get_current_user().user_id()
     new_resource.name = request.POST['name']
     new_resource.start = request.POST['start']
     new_resource.end = request.POST['end']

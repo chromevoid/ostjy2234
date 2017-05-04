@@ -31,6 +31,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <form class="form-horizontal">
+                        {% csrf_token %}
                         <div class="form-group">
                             <label for="time" class="col-sm-3 control-label">Time</label>
                             <div class="col-sm-8">
@@ -51,13 +52,14 @@
             </div>
         </div>
         <div class="col-md-8">
-            {% if show_edit %}
+            {% if current_user == current_resource.owner %}
             <div class="panel panel-default">
-                <div class="panel-heading">Edit Resources</div>
+                <div class="panel-heading">Edit Resources {{ current_user }} & {{ current_resource.owner }}</div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-12">
                             <form class="form-horizontal">
+                                {% csrf_token %}
                                 <div class="form-group">
                                     <label for="name" class="col-sm-4 control-label">Name</label>
                                     <div class="col-sm-6">
@@ -90,7 +92,7 @@
                                     <label for="description" class="col-sm-4 control-label">Description</label>
                                     <div class="col-sm-6">
                                         <textarea class="form-control" id="description" rows="3"
-                                                  placeholder="Describe your resource" value="{{ current_resource.description }}"></textarea>
+                                                  placeholder="Describe your resource">{{ current_resource.description }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-sm-offset-4">

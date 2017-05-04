@@ -9,8 +9,8 @@ from django.core.validators import *
 class Resource(models.Model):
     created = models.DateTimeField()
     owner = models.CharField(
-        max_length=20,
-        validators=[MaxLengthValidator(20)]
+        max_length=100,
+        validators=[MaxLengthValidator(100)]
     )
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
