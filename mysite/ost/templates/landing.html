@@ -29,18 +29,14 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Your Reservations</div>
                 <div class="panel-body">
+                    {% for reservation in my_reservation_list %}
                     <div class="list-group">
-                        <h4 class="list-group-item-heading">Resource Name</h4>
-                        <p class="list-group-item-text">User: </p>
-                        <p class="list-group-item-text">Time: </p>
-                        <p class="list-group-item-text">Duration: </p>
+                        <h4 class="list-group-item-heading">{{ reservation.name }}</h4>
+                        <p class="list-group-item-text">User: {{ reservation.owner }}</p>
+                        <p class="list-group-item-text">Time: {{ reservation.time }}</p>
+                        <p class="list-group-item-text">Duration: {{ reservation.duration }} </p>
                     </div>
-                    <div class="list-group">
-                        <h4 class="list-group-item-heading">Resource Name</h4>
-                        <p class="list-group-item-text">User: </p>
-                        <p class="list-group-item-text">Time: </p>
-                        <p class="list-group-item-text">Duration: </p>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -48,13 +44,15 @@
             <div class="panel panel-default">
                 <div class="panel-heading">All Resources</div>
                 <div class="panel-body">
+                    {% for resource in resource_list %}
                     <div class="list-group">
-                        <h4 class="list-group-item-heading">Resource Name</h4>
-                        <p class="list-group-item-text">Start: </p>
-                        <p class="list-group-item-text">End: </p>
-                        <p class="list-group-item-text">Description: </p>
-                        <p class="list-group-item-text">Tags: </p>
+                        <h4 class="list-group-item-heading"><a href="#">{{ resource.name }}</a></h4>
+                        <p class="list-group-item-text">Start: {{ resource.start }}</p>
+                        <p class="list-group-item-text">End: {{ resource.end }}</p>
+                        <p class="list-group-item-text">Description: {{ resource.description }}</p>
+                        <p class="list-group-item-text">Tags: {{ resource.tags }}</p>
                     </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -63,13 +61,15 @@
                 <div class="panel-heading">Your Resources <a href="{% url 'new' %}" role="button">Create A New Resource</a>
                 </div>
                 <div class="panel-body">
+                    {% for resource in my_resource_list %}
                     <div class="list-group">
-                        <h4 class="list-group-item-heading">Resource Name</h4>
-                        <p class="list-group-item-text">Start: </p>
-                        <p class="list-group-item-text">End: </p>
-                        <p class="list-group-item-text">Description: </p>
-                        <p class="list-group-item-text">Tags: </p>
+                        <h4 class="list-group-item-heading"><a href="#">{{ resource.name }}</a></h4>
+                        <p class="list-group-item-text">Start: {{ resource.start }}</p>
+                        <p class="list-group-item-text">End: {{ resource.end }}</p>
+                        <p class="list-group-item-text">Description: {{ resource.description }}</p>
+                        <p class="list-group-item-text">Tags: {{ resource.tags }}</p>
                     </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>

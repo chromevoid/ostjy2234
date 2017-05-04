@@ -19,7 +19,18 @@ import re
 
 
 def index(request):
-    return render(request, 'landing.html')
+    my_reservation_list = Reservation.objects.filter(
+        owner=users.get_current_user(),
+    )
+    resource_list = Resource.objects.all()
+    my_resource_list = Resource.objects.filter(
+        owner=users.get_current_user(),
+    )
+    return render(request, 'landing.html', {
+        'my_reservation_list': my_reservation_list,
+        'resource_list': resource_list,
+        'my_resource_list': my_resource_list,
+    })
 
 
 def new(request):
@@ -40,4 +51,4 @@ def create_resource(request):
     new_resource.tags = request.POST['tags']
     new_resource.description = request.POST['description']
     new_resource.save()
-    return redirect(request.META.get('HTTP_REFERER'))
+    return render(request, 'new.html')
