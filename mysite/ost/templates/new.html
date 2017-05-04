@@ -26,7 +26,8 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <form class="form-horizontal">
+            <form class="form-horizontal" action="{% url 'create_resource' %}" method="post">
+                {% csrf_token %}
                 <div class="form-group">
                     <label for="name" class="col-sm-2 control-label">Name</label>
                     <div class="col-sm-6">
