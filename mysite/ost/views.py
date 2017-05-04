@@ -41,12 +41,16 @@ def resource(request, resource_id=None):
     current_resource = get_object_or_404(Resource, pk=resource_id)
     current_user = users.get_current_user()
     show_edit = False
+    if current_user == current_resource.owner:
+        show_edit = True
     reservation_list = Reservation.objects.filter(
         resource=current_resource,
     )
-    if current_user == current_resource.owner:
-        show_edit = True
-    return render(request, 'resource.html')
+    return render(request, 'resource.html', {
+        'current_resource': current_resource,
+        'show_edit': show_edit,
+        'reservation_list': reservation_list,
+    })
 
 
 def create_resource(request):
