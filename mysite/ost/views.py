@@ -20,11 +20,11 @@ import re
 
 def index(request):
     my_reservation_list = Reservation.objects.filter(
-        owner=users.get_current_user().user_id(),
+        owner=users.get_current_user(),
     )
     resource_list = Resource.objects.all()
     my_resource_list = Resource.objects.filter(
-        owner=users.get_current_user().user_id(),
+        owner=users.get_current_user(),
     )
     return render(request, 'landing.html', {
         'my_reservation_list': my_reservation_list,
@@ -39,13 +39,19 @@ def new(request):
 
 def resource(request, resource_id=None):
     current_resource = get_object_or_404(Resource, pk=resource_id)
-    current_user = users.get_current_user().user_id()
+    my_resource = Resource.objects.filter(
+        owner=users.get_current_user(),
+    )
+    edit = False
+    if len(my_resource) != 0:
+        edit = True
     reservation_list = Reservation.objects.filter(
         resource=current_resource,
     )
     return render(request, 'resource.html', {
         'current_resource': current_resource,
-        'current_user': current_user,
+        'current_user': users.get_current_user(),
+        'edit': edit,
         'reservation_list': reservation_list,
     })
 
@@ -53,7 +59,7 @@ def resource(request, resource_id=None):
 def create_resource(request):
     new_resource = Resource()
     new_resource.created = datetime.datetime.now()
-    new_resource.owner = users.get_current_user().user_id()
+    new_resource.owner = users.get_current_user()
     new_resource.name = request.POST['name']
     new_resource.start = request.POST['start']
     new_resource.end = request.POST['end']
@@ -62,3 +68,14 @@ def create_resource(request):
     new_resource.last = datetime.datetime.now()
     new_resource.save()
     return render(request, 'new.html')
+
+
+def update_resource(request, resource_id=None):
+    current_resource = get_object_or_404(Resource, pk=resource_id)
+    current_resource.name = request.POST['name']
+    current_resource.start = request.POST['start']
+    current_resource.end = request.POST['end']
+    current_resource.tags = request.POST['tags']
+    current_resource.description = request.POST['description']
+    current_resource.save()
+    return render(request, 'resource.html')
