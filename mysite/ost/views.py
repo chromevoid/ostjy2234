@@ -20,16 +20,16 @@ def index(request):
     my_reservation_list = Reservation.objects.filter(
         owner=users.get_current_user(),
     )
-    resource_list = Resource.objects.all()
+    resource_list = Resource.objects.all().order_by('last')
     tag_lists = []
     for r in resource_list:
-        tag_lists.append(r.tags.all())
+        tag_lists.append(list(r.tags.all()))
     my_resource_list = Resource.objects.filter(
         owner=users.get_current_user(),
-    )
+    ).order_by('last')
     my_tag_lists = []
     for r in my_resource_list:
-        my_tag_lists.append(r.tags.all())
+        my_tag_lists.append(list(r.tags.all()))
     return render(request, 'landing.html', {
         'my_reservation_list': my_reservation_list,
         'resource_list': resource_list,
@@ -49,6 +49,13 @@ def resource(request, resource_id=None):
         owner=users.get_current_user(),
         pk=resource_id,
     )
+    tag_list = []
+    for r in my_resource:
+        tag_list = list(r.tags.all())
+    tag_list_string = ""
+    for tag in tag_list:
+        tag_list_string = tag_list_string + str(tag.name) + ","
+    tag_list_string = tag_list_string[:len(tag_list_string)-1]
     edit = False
     if len(my_resource) != 0:
         edit = True
@@ -58,6 +65,7 @@ def resource(request, resource_id=None):
     return render(request, 'resource.html', {
         'current_resource': current_resource,
         'current_user': users.get_current_user(),
+        'tag_list_string': tag_list_string,
         'edit': edit,
         'reservation_list': reservation_list,
     })
