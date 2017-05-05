@@ -23,8 +23,6 @@ def index(request):
     resource_list = Resource.objects.all().order_by('last')
     tag_lists = []
     for r in resource_list:
-        temp_list = []
-        temp_list.extend()
         tag_lists.append(list(r.tags.all()))
     my_resource_list = Resource.objects.filter(
         owner=users.get_current_user(),
@@ -56,8 +54,8 @@ def resource(request, resource_id=None):
         tag_list = list(r.tags.all())
     tag_list_string = ""
     for tag in tag_list:
-        tag_list_string = tag_list_string + str(tag.name) + ","
-    tag_list_string = tag_list_string[:len(tag_list_string)-1]
+        tag_list_string = tag_list_string + str(tag.name) + ", "
+    tag_list_string = tag_list_string[:len(tag_list_string)-2]
     edit = False
     if len(my_resource) != 0:
         edit = True
@@ -73,6 +71,15 @@ def resource(request, resource_id=None):
     })
 
 
+def get_resource(request, tag_id=None):
+    current_tag = get_object_or_404(Tag, pk=tag_id)
+    resource_list = current_tag.resource_set.all()
+    return render(request, 'tag.html', {
+        'current_tag': current_tag,
+        'resource_list': resource_list,
+    })
+
+
 def create_resource(request):
     new_resource = Resource()
     new_resource.created = datetime.datetime.now()
@@ -83,7 +90,7 @@ def create_resource(request):
     new_resource.description = request.POST['description']
     new_resource.last = datetime.datetime.now()
     new_resource.save()
-    tags = request.POST['tags'].split(",")
+    tags = request.POST['tags'].replace(" ", "").split(",")
     for tag in tags:
         old_tag = Tag.objects.filter(name=tag)
         if len(old_tag) == 0:
@@ -104,7 +111,7 @@ def update_resource(request, resource_id=None):
     current_resource.description = request.POST['description']
     current_resource.save()
     current_resource.tags.clear()
-    tags = request.POST['tags'].split(",")
+    tags = request.POST['tags'].replace(" ", "").split(",")
     for tag in tags:
         old_tag = Tag.objects.filter(name=tag)
         if len(old_tag) == 0:

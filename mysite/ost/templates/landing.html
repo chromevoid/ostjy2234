@@ -33,7 +33,7 @@
                     <div class="list-group">
                         <h4 class="list-group-item-heading"><a href="{% url 'resource' reservation.resource.id %}">
                             {{ reservation.resource.name }}</a></h4>
-                        <p class="list-group-item-text">User: {{ reservation.owner }}</p>
+                        <p class="list-group-item-text">User: <a href="#">{{ reservation.owner }}</a></p>
                         <p class="list-group-item-text">Time: {{ reservation.time }}</p>
                         <p class="list-group-item-text">Duration: {{ reservation.duration }} </p>
                         <form class="form-horizontal" action="{% url 'delete_reservation' reservation.id %}"
@@ -60,7 +60,7 @@
                         <p class="list-group-item-text">Tags:
                             {% for tag_list in tag_lists %}
                                 {% for tag in tag_list %}
-                                <a href="#">{{ tag.name }}</a>
+                                <a href="{% url 'get_resource' tag.id %}">{{ tag.name }}</a>
                                 {% endfor %}
                             {% endfor %}
                         </p>
@@ -85,7 +85,7 @@
                         <p class="list-group-item-text">Tags:
                             {% for tag_list in my_tag_lists %}
                                 {% for tag in tag_list %}
-                                <a href="#">{{ tag.name }}</a>
+                                <a href="{% url 'get_resource' tag.id %}">{{ tag.name }}</a>
                                 {% endfor %}
                             {% endfor %}
                         </p>
