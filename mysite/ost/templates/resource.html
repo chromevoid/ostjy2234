@@ -30,7 +30,8 @@
         <div class="col-md-4">
             <div class="row">
                 <div class="col-md-12">
-                    <form class="form-horizontal">
+                    <form class="form-horizontal" action="{% url 'create_reservation' current_resource.id %}"
+                          method="post">
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="time" class="col-sm-3 control-label">Time</label>
@@ -58,7 +59,8 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <form class="form-horizontal" action="{% url 'update_resource' current_resource.id %}" method="post">
+                            <form class="form-horizontal" action="{% url 'update_resource' current_resource.id %}"
+                                  method="post">
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <label for="name" class="col-sm-4 control-label">Name</label>

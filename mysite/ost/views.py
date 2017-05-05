@@ -68,7 +68,7 @@ def create_resource(request):
     new_resource.description = request.POST['description']
     new_resource.last = datetime.datetime.now()
     new_resource.save()
-    return render(request, 'new.html')
+    return redirect(request.META.get('HTTP_REFERER'))
 
 
 def update_resource(request, resource_id=None):
@@ -79,4 +79,30 @@ def update_resource(request, resource_id=None):
     current_resource.tags = request.POST['tags']
     current_resource.description = request.POST['description']
     current_resource.save()
-    return render(request, 'resource.html')
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+def create_reservation(request, resource_id=None):
+    current_resource = get_object_or_404(Resource, pk=resource_id)
+    new_reservation = Reservation()
+    new_reservation.created = datetime.datetime.now()
+    new_reservation.owner = users.get_current_user()
+    new_reservation.resource = current_resource
+    new_reservation.time = request.POST['time']
+    new_reservation.duration = request.POST['duration']
+
+    new_reservation_time, minute_reservation = request.POST['time'].split(":")
+    current_resource_end, minute_resource = current_resource.end.split(":")
+    if int(new_reservation_time) + int(request.POST['duration']) > int(current_resource_end):
+        messages.error(request, "Time not available")
+    else:
+        new_reservation.save()
+        current_resource.last = datetime.datetime.now()
+        current_resource.save()
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+def delete_reservation(request, reservation_id=None):
+    current_reservation = get_object_or_404(Reservation, pk=reservation_id)
+    current_reservation.delete()
+    return redirect(request.META.get('HTTP_REFERER'))
