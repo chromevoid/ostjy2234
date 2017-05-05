@@ -58,10 +58,8 @@
                         <p class="list-group-item-text">End: {{ resource.end }}</p>
                         <p class="list-group-item-text">Description: {{ resource.description }}</p>
                         <p class="list-group-item-text">Tags:
-                            {% for tag_list in tag_lists %}
-                                {% for tag in tag_list %}
-                                <a href="{% url 'get_resource' tag.id %}">{{ tag.name }}</a>
-                                {% endfor %}
+                            {% for tag in resource.tags.all %}
+                            <a href="{% url 'get_resource' tag.id %}">{{ tag.name }}</a>
                             {% endfor %}
                         </p>
                     </div>
@@ -83,10 +81,8 @@
                         <p class="list-group-item-text">End: {{ resource.end }}</p>
                         <p class="list-group-item-text">Description: {{ resource.description }}</p>
                         <p class="list-group-item-text">Tags:
-                            {% for tag_list in my_tag_lists %}
-                                {% for tag in tag_list %}
-                                <a href="{% url 'get_resource' tag.id %}">{{ tag.name }}</a>
-                                {% endfor %}
+                            {% for tag in resource.tags.all %}
+                            <a href="{% url 'get_resource' tag.id %}">{{ tag.name }}</a>
                             {% endfor %}
                         </p>
                     </div>

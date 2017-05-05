@@ -2,8 +2,8 @@
 from __future__ import unicode_literals
 
 # Create your models here.
-from django.db import models
 from django.core.validators import *
+from django.db import models
 
 
 class Tag(models.Model):
