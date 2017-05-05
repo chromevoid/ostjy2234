@@ -83,8 +83,10 @@
                         <p class="list-group-item-text">End: {{ resource.end }}</p>
                         <p class="list-group-item-text">Description: {{ resource.description }}</p>
                         <p class="list-group-item-text">Tags:
-                            {% for tag in my_tag_lists.0 %}
-                            <a href="#">{{ tag.name }}</a>
+                            {% for tag_list in my_tag_lists %}
+                                {% for tag in tag_list %}
+                                <a href="#">{{ tag.name }}</a>
+                                {% endfor %}
                             {% endfor %}
                         </p>
                     </div>

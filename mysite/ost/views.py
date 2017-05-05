@@ -23,6 +23,8 @@ def index(request):
     resource_list = Resource.objects.all().order_by('last')
     tag_lists = []
     for r in resource_list:
+        temp_list = []
+        temp_list.extend()
         tag_lists.append(list(r.tags.all()))
     my_resource_list = Resource.objects.filter(
         owner=users.get_current_user(),
