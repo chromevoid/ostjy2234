@@ -1,143 +1,116 @@
+{% extends "base.html" %}
+
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Resource</title>
+{% block title %} Resource {% endblock %}
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}"/>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-</head>
-<body>
-<div class="container">
-    <div class="page-header">
-        <h1>{{ current_resource.name }}
-            <small><a href="{% url 'index' %}" role="button">Back to Home</a></small>
-        </h1>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="list-group">
-                        <h4 class="list-group-item-heading">{{ current_resource.name }}</h4>
-                        <p class="list-group-item-text">Start: {{ current_resource.start }}</p>
-                        <p class="list-group-item-text">End: {{ current_resource.end }}</p>
-                        <p class="list-group-item-text">Description: {{ current_resource.description }}</p>
-                        <p class="list-group-item-text">Tags: </p>
-                    </div>
-                    <form class="form-horizontal" action="{% url 'create_reservation' current_resource.id %}"
-                          method="post">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="time" class="col-sm-3 control-label">Time</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" name="time" placeholder="Time e.g. 6:00">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="duration" class="col-sm-3 control-label">Duration</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" name="duration" placeholder="Duration e.g. 3">
-                            </div>
-                        </div>
-                        <div class="col-sm-8 col-sm-offset-3">
-                            <button type="submit" class="btn btn-default" style="margin-bottom: 5%;">Reserve</button>
-                        </div>
-                    </form>
+{% block content %}
+<div class="page-header">
+    <h1>{{ current_resource.name }}
+        <small><a href="{% url 'index' %}" role="button">Back to Home</a></small>
+    </h1>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="list-group">
+                    <h4 class="list-group-item-heading">{{ current_resource.name }}</h4>
+                    <p class="list-group-item-text">Start: {{ current_resource.start }}</p>
+                    <p class="list-group-item-text">End: {{ current_resource.end }}</p>
+                    <p class="list-group-item-text">Description: {{ current_resource.description }}</p>
+                    <p class="list-group-item-text">Tags: </p>
                 </div>
+                <form class="form-horizontal" action="{% url 'create_reservation' current_resource.id %}"
+                      method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="time" class="col-sm-3 control-label">Time</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="time" placeholder="Time e.g. 6:00">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="duration" class="col-sm-3 control-label">Duration</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="duration" placeholder="Duration e.g. 3">
+                        </div>
+                    </div>
+                    <div class="col-sm-8 col-sm-offset-3">
+                        <button type="submit" class="btn btn-default" style="margin-bottom: 5%;">Reserve</button>
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="col-md-8">
-            {% if edit %}
-            <div class="panel panel-default">
-                <div class="panel-heading">Edit Resources {{ current_user }} & {{ current_resource.owner }}</div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <form class="form-horizontal" action="{% url 'update_resource' current_resource.id %}"
-                                  method="post">
-                                {% csrf_token %}
-                                <div class="form-group">
-                                    <label for="name" class="col-sm-4 control-label">Name</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="name" placeholder="Resource name"
-                                               value="{{ current_resource.name }}">
-                                    </div>
+    </div>
+    <div class="col-md-8">
+        {% if edit %}
+        <div class="panel panel-default">
+            <div class="panel-heading">Edit Resources {{ current_user }} & {{ current_resource.owner }}</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form class="form-horizontal" action="{% url 'update_resource' current_resource.id %}"
+                              method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="name" class="col-sm-4 control-label">Name</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="name" placeholder="Resource name"
+                                           value="{{ current_resource.name }}">
                                 </div>
-                                <div class="form-group">
-                                    <label for="start" class="col-sm-4 control-label">Start</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="start"
-                                               placeholder="Start time e.g. 6:00" value="{{ current_resource.start }}">
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="start" class="col-sm-4 control-label">Start</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="start"
+                                           placeholder="Start time e.g. 6:00" value="{{ current_resource.start }}">
                                 </div>
-                                <div class="form-group">
-                                    <label for="end" class="col-sm-4 control-label">End</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="end"
-                                               placeholder="End time e.g. 18:00" value="{{ current_resource.end }}">
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="end" class="col-sm-4 control-label">End</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="end"
+                                           placeholder="End time e.g. 18:00" value="{{ current_resource.end }}">
                                 </div>
-                                <div class="form-group">
-                                    <label for="tags" class="col-sm-4 control-label">Tags</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="tags"
-                                               placeholder="tag1, tag2, tag3.." value="{{ tag_list_string }}">
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="tags" class="col-sm-4 control-label">Tags</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="tags"
+                                           placeholder="tag1, tag2, tag3.." value="{{ tag_list_string }}">
                                 </div>
-                                <div class="form-group">
-                                    <label for="description" class="col-sm-4 control-label">Description</label>
-                                    <div class="col-sm-6">
+                            </div>
+                            <div class="form-group">
+                                <label for="description" class="col-sm-4 control-label">Description</label>
+                                <div class="col-sm-6">
                                         <textarea class="form-control" name="description" rows="3"
                                                   placeholder="Describe your resource">{{ current_resource.description }}</textarea>
-                                    </div>
                                 </div>
-                                <div class="col-sm-6 col-sm-offset-4">
-                                    <button type="submit" class="btn btn-default" style="margin-bottom: 5%;">Update
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                            </div>
+                            <div class="col-sm-6 col-sm-offset-4">
+                                <button type="submit" class="btn btn-default" style="margin-bottom: 5%;">Update
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                </div>
-            </div>
-            {% endif %}
-            <div class="panel panel-default">
-                <div class="panel-heading">Reservations</div>
-                <div class="panel-body">
-                    {% for reservation in reservation_list %}
-                    <div class="list-group">
-                        <h4 class="list-group-item-heading">{{ reservation.resource.name }}</h4>
-                        <p class="list-group-item-text">User: {{ reservation.owner }}</p>
-                        <p class="list-group-item-text">Time: {{ reservation.time }}</p>
-                        <p class="list-group-item-text">Duration: {{ reservation.duration }} </p>
-                    </div>
-                    {% endfor %}
                 </div>
             </div>
         </div>
+        {% endif %}
+        <div class="panel panel-default">
+            <div class="panel-heading">Reservations</div>
+            <div class="panel-body">
+                {% for reservation in reservation_list %}
+                <div class="list-group">
+                    <h4 class="list-group-item-heading">{{ reservation.resource.name }}</h4>
+                    <p class="list-group-item-text">User: {{ reservation.owner }}</p>
+                    <p class="list-group-item-text">Time: {{ reservation.time }}</p>
+                    <p class="list-group-item-text">Duration: {{ reservation.duration }} </p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
-
-    <footer class="footer">
-        <p><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> 2017 Open Source Tools </p>
-    </footer>
-
 </div>
-
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
-</body>
+{% endblock %}
