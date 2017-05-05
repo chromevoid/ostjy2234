@@ -16,13 +16,7 @@
             <div class="panel-heading">All Resources</div>
             <div class="panel-body">
                 {% for resource in resource_list %}
-                <div class="list-group">
-                    <h4 class="list-group-item-heading"><a href="{% url 'resource' resource.id %}">
-                        {{ resource.name }}</a></h4>
-                    <p class="list-group-item-text">Start: {{ resource.start }}</p>
-                    <p class="list-group-item-text">End: {{ resource.end }}</p>
-                    <p class="list-group-item-text">Description: {{ resource.description }}</p>
-                </div>
+                {% include "show_resource_info.html" %}
                 {% endfor %}
             </div>
         </div>

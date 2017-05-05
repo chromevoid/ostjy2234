@@ -14,18 +14,12 @@
             <div class="panel-heading">Your Reservations</div>
             <div class="panel-body">
                 {% for reservation in my_reservation_list %}
-                <div class="list-group">
-                    <h4 class="list-group-item-heading"><a href="{% url 'resource' reservation.resource.id %}">
-                        {{ reservation.resource.name }}</a></h4>
-                    <p class="list-group-item-text">User: <a href="#">{{ reservation.owner }}</a></p>
-                    <p class="list-group-item-text">Time: {{ reservation.time }}</p>
-                    <p class="list-group-item-text">Duration: {{ reservation.duration }} </p>
-                    <form class="form-horizontal" action="{% url 'delete_reservation' reservation.id %}"
-                          method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-default" style="margin-bottom: 5%;">Delete</button>
-                    </form>
-                </div>
+                {% include "show_reservation_info.html" %}
+                <form class="form-horizontal" action="{% url 'delete_reservation' reservation.id %}"
+                      method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-default" style="margin-bottom: 5%;">Delete</button>
+                </form>
                 {% endfor %}
             </div>
         </div>

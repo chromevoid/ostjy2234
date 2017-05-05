@@ -14,26 +14,36 @@
     <div class="col-md-4">
         <div class="row">
             <div class="col-md-12">
-                {% include "show_resource_info.html" %}
-                <form class="form-horizontal" action="{% url 'create_reservation' resource.id %}"
-                      method="post">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="time" class="col-sm-3 control-label">Time</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" name="time" placeholder="Time e.g. 6:00">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="well">
+                            {% include "show_resource_info.html" %}
                         </div>
+                        <form class="form-horizontal" action="{% url 'create_reservation' resource.id %}"
+                              method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="time" class="col-sm-3 control-label">Time</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="time" placeholder="Time e.g. 6:00">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="duration" class="col-sm-3 control-label">Duration</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="duration"
+                                           placeholder="Duration e.g. 3">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-3">
+                                    <button type="submit" class="btn btn-default" style="margin-bottom: 5%;">Reserve
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label for="duration" class="col-sm-3 control-label">Duration</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" name="duration" placeholder="Duration e.g. 3">
-                        </div>
-                    </div>
-                    <div class="col-sm-8 col-sm-offset-3">
-                        <button type="submit" class="btn btn-default" style="margin-bottom: 5%;">Reserve</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -82,9 +92,11 @@
                                                   placeholder="Describe your resource">{{ resource.description }}</textarea>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-sm-offset-4">
-                                <button type="submit" class="btn btn-default" style="margin-bottom: 5%;">Update
-                                </button>
+                            <div class="form-group">
+                                <div class="col-sm-6 col-sm-offset-4">
+                                    <button type="submit" class="btn btn-default" style="margin-bottom: 5%;">Update
+                                    </button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -96,12 +108,7 @@
             <div class="panel-heading">Reservations</div>
             <div class="panel-body">
                 {% for reservation in reservation_list %}
-                <div class="list-group">
-                    <h4 class="list-group-item-heading">{{ reservation.resource.name }}</h4>
-                    <p class="list-group-item-text">User: {{ reservation.owner }}</p>
-                    <p class="list-group-item-text">Time: {{ reservation.time }}</p>
-                    <p class="list-group-item-text">Duration: {{ reservation.duration }} </p>
-                </div>
+                {% include "show_reservation_info.html" %}
                 {% endfor %}
             </div>
         </div>
