@@ -35,18 +35,7 @@
             <div class="panel-heading">All Resources</div>
             <div class="panel-body">
                 {% for resource in resource_list %}
-                <div class="list-group">
-                    <h4 class="list-group-item-heading"><a href="{% url 'resource' resource.id %}">
-                        {{ resource.name }}</a></h4>
-                    <p class="list-group-item-text">Start: {{ resource.start }}</p>
-                    <p class="list-group-item-text">End: {{ resource.end }}</p>
-                    <p class="list-group-item-text">Description: {{ resource.description }}</p>
-                    <p class="list-group-item-text">Tags:
-                        {% for tag in resource.tags.all %}
-                        <a href="{% url 'get_resource' tag.id %}">{{ tag.name }}</a>
-                        {% endfor %}
-                    </p>
-                </div>
+                {% include "show_resource_info.html" %}
                 {% endfor %}
             </div>
         </div>
@@ -58,18 +47,7 @@
             </div>
             <div class="panel-body">
                 {% for resource in my_resource_list %}
-                <div class="list-group">
-                    <h4 class="list-group-item-heading"><a href="{% url 'resource' resource.id %}">
-                        {{ resource.name }}</a></h4>
-                    <p class="list-group-item-text">Start: {{ resource.start }}</p>
-                    <p class="list-group-item-text">End: {{ resource.end }}</p>
-                    <p class="list-group-item-text">Description: {{ resource.description }}</p>
-                    <p class="list-group-item-text">Tags:
-                        {% for tag in resource.tags.all %}
-                        <a href="{% url 'get_resource' tag.id %}">{{ tag.name }}</a>
-                        {% endfor %}
-                    </p>
-                </div>
+                {% include "show_resource_info.html" %}
                 {% endfor %}
             </div>
         </div>

@@ -63,8 +63,7 @@ def resource(request, resource_id=None):
         resource=current_resource,
     )
     return render(request, 'resource.html', {
-        'current_resource': current_resource,
-        'current_user': users.get_current_user(),
+        'resource': current_resource,
         'tag_list_string': tag_list_string,
         'edit': edit,
         'reservation_list': reservation_list,
