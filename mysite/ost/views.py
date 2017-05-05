@@ -11,8 +11,6 @@ from django.contrib import messages
 from google.appengine.api import users
 
 import datetime
-import random
-import re
 
 
 # Create your views here.
@@ -23,13 +21,21 @@ def index(request):
         owner=users.get_current_user(),
     )
     resource_list = Resource.objects.all()
+    tag_lists = []
+    for r in resource_list:
+        tag_lists.append(r.tags.all())
     my_resource_list = Resource.objects.filter(
         owner=users.get_current_user(),
     )
+    my_tag_lists = []
+    for r in my_resource_list:
+        my_tag_lists.append(r.tags.all())
     return render(request, 'landing.html', {
         'my_reservation_list': my_reservation_list,
         'resource_list': resource_list,
+        'tag_lists': tag_lists,
         'my_resource_list': my_resource_list,
+        'my_tag_lists': my_tag_lists,
     })
 
 
@@ -64,10 +70,19 @@ def create_resource(request):
     new_resource.name = request.POST['name']
     new_resource.start = request.POST['start']
     new_resource.end = request.POST['end']
-    new_resource.tags = request.POST['tags']
     new_resource.description = request.POST['description']
     new_resource.last = datetime.datetime.now()
     new_resource.save()
+    tags = request.POST['tags'].split(",")
+    for tag in tags:
+        old_tag = Tag.objects.filter(name=tag)
+        if len(old_tag) == 0:
+            new_tag = Tag()
+            new_tag.name = tag
+            new_tag.save()
+            new_resource.tags.add(new_tag)
+        else:
+            new_resource.tags.add(Tag.objects.filter(name=tag)[:1].get())
     return redirect(request.META.get('HTTP_REFERER'))
 
 
@@ -76,9 +91,19 @@ def update_resource(request, resource_id=None):
     current_resource.name = request.POST['name']
     current_resource.start = request.POST['start']
     current_resource.end = request.POST['end']
-    current_resource.tags = request.POST['tags']
     current_resource.description = request.POST['description']
     current_resource.save()
+    current_resource.tags.clear()
+    tags = request.POST['tags'].split(",")
+    for tag in tags:
+        old_tag = Tag.objects.filter(name=tag)
+        if len(old_tag) == 0:
+            new_tag = Tag()
+            new_tag.name = tag
+            new_tag.save()
+            current_resource.tags.add(new_tag)
+        else:
+            current_resource.tags.add(Tag.objects.filter(name=tag)[:1].get())
     return redirect(request.META.get('HTTP_REFERER'))
 
 

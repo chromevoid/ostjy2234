@@ -57,7 +57,11 @@
                         <p class="list-group-item-text">Start: {{ resource.start }}</p>
                         <p class="list-group-item-text">End: {{ resource.end }}</p>
                         <p class="list-group-item-text">Description: {{ resource.description }}</p>
-                        <p class="list-group-item-text">Tags: {{ resource.tags }}</p>
+                        <p class="list-group-item-text">Tags:
+                            {% for tag in tag_lists %}
+                            <a href="#">{{ tag }}</a>
+                            {% endfor %}
+                        </p>
                     </div>
                     {% endfor %}
                 </div>
@@ -76,7 +80,11 @@
                         <p class="list-group-item-text">Start: {{ resource.start }}</p>
                         <p class="list-group-item-text">End: {{ resource.end }}</p>
                         <p class="list-group-item-text">Description: {{ resource.description }}</p>
-                        <p class="list-group-item-text">Tags: {{ resource.tags }}</p>
+                        <p class="list-group-item-text">Tags:
+                            {% for tag in my_tag_lists %}
+                            <a href="#">{{ tag }}</a>
+                            {% endfor %}
+                        </p>
                     </div>
                     {% endfor %}
                 </div>
@@ -85,7 +93,7 @@
     </div>
 
     <footer class="footer">
-        <p> 2017 Open Source Tools </p>
+        <p><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> 2017 Open Source Tools </p>
     </footer>
 
 </div>
