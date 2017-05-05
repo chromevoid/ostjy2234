@@ -113,6 +113,7 @@ def create_resource(request):
             new_resource.tags.add(new_tag)
         else:
             new_resource.tags.add(Tag.objects.filter(name=tag)[:1].get())
+    messages.success(request, "Create a resource: success")
     return redirect(request.META.get('HTTP_REFERER'))
 
 
@@ -134,6 +135,7 @@ def update_resource(request, resource_id=None):
             current_resource.tags.add(new_tag)
         else:
             current_resource.tags.add(Tag.objects.filter(name=tag)[:1].get())
+    messages.success(request, "Update a resource: success")
     return redirect(request.META.get('HTTP_REFERER'))
 
 
@@ -148,16 +150,18 @@ def create_reservation(request, resource_id=None):
 
     new_reservation_time, minute_reservation = request.POST['time'].split(":")
     current_resource_end, minute_resource = current_resource.end.split(":")
-    if int(new_reservation_time) + int(request.POST['duration']) > int(current_resource_end):
-        messages.error(request, "Time not available")
+    if int(new_reservation_time) + int(request.POST['duration']) >= int(current_resource_end):
+        messages.error(request, "Make a reservation: time is not within the available hours of the resource")
     else:
         new_reservation.save()
         current_resource.last = datetime.datetime.now()
         current_resource.save()
+        messages.success(request, "Make a reservation: success")
     return redirect(request.META.get('HTTP_REFERER'))
 
 
 def delete_reservation(request, reservation_id=None):
     current_reservation = get_object_or_404(Reservation, pk=reservation_id)
     current_reservation.delete()
+    messages.sucess(request, "Delete a reservation: success")
     return redirect(request.META.get('HTTP_REFERER'))

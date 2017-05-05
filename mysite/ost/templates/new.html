@@ -12,6 +12,7 @@
 </div>
 <div class="row">
     <div class="col-md-12">
+        {% include "message.html" %}
         <form class="form-horizontal" action="{% url 'create_resource' %}" method="post">
             {% csrf_token %}
             <div class="form-group">

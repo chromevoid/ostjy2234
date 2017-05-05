@@ -13,6 +13,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">Your Reservations</div>
             <div class="panel-body">
+                {% include "message.html" %}
                 {% for reservation in my_reservation_list %}
                 {% include "show_reservation_info.html" %}
                 <form class="form-horizontal" action="{% url 'delete_reservation' reservation.id %}"
