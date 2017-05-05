@@ -79,6 +79,20 @@ def get_resource(request, tag_id=None):
     })
 
 
+def get_user(request, username=None):
+    resource_list = Resource.objects.filter(
+        owner=username,
+    )
+    reservation_list = Reservation.objects.filter(
+        owner=username,
+    )
+    return render(request, 'user.html', {
+        'username': username,
+        'resource_list': resource_list,
+        'reservation_list': reservation_list,
+    })
+
+
 def create_resource(request):
     new_resource = Resource()
     new_resource.created = datetime.datetime.now()

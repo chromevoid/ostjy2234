@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %} Tag {% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ username }}
+        <small><a href="{% url 'index' %}" role="button">Back to Home</a></small>
+    </h1>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">Reservations</div>
+            <div class="panel-body">
+                {% for reservation in reservation_list %}
+                {% include "show_reservation_info.html" %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">Resources</div>
+            <div class="panel-body">
+                {% for resource in resource_list %}
+                {% include "show_resource_info.html" %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
