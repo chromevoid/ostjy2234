@@ -25,8 +25,8 @@ class Resource(models.Model):
     )
     description = models.CharField(
         default="",
-        max_length=100,
-        validators=[MaxLengthValidator(100)]
+        max_length=200,
+        validators=[MaxLengthValidator(200)]
     )
     start = models.CharField(
         max_length=100,
