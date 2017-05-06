@@ -148,6 +148,7 @@ def create_reservation(request, resource_id=None):
     new_reservation.resource = current_resource
     new_reservation.time = request.POST['time']
     new_reservation.duration = request.POST['duration']
+
     # check time is within the available hours of the resource
     time_reservation, sign_reservation = request.POST['time'].split(" ")
     time_resource_start, sign_resource_start = current_resource.start.split(" ")
@@ -168,11 +169,34 @@ def create_reservation(request, resource_id=None):
     else:
         hour_resource_end = int(hour_resource_end) if int(hour_reservation) != 12 else 0
     compare_reservation_start = hour_reservation * 60 + int(minute_reservation)
-    compare_reservation_end = hour_reservation * 60 + int(minute_reservation) + int(request.POST['duration']) * 60
+    compare_reservation_end = compare_reservation_start + int(request.POST['duration']) * 60
     compare_resource_start = hour_resource_start * 60 + int(minute_resource_start)
     compare_resource_end = hour_resource_end * 60 + int(minute_resource_end)
+
+    # check available
+    reservation_list = Reservation.objects.filter(
+        resource=current_resource,
+    )
+    reserved = False
+    for reservation in reservation_list:
+        time, sign = reservation.time.split(" ")
+        hour, minute = time.split(":")
+        if sign == "PM":
+            hour = int(hour) + 12
+        else:
+            hour = int(hour) if int(hour) != 12 else 0
+        start = hour * 60 + int(minute)
+        end = start + int(reservation.duration) * 60
+        if compare_reservation_start >= end or compare_reservation_end <= start:
+            continue
+        else:
+            reserved = True
+            break
+
     if compare_reservation_start < compare_resource_start or compare_reservation_end > compare_resource_end:
         messages.error(request, "Make a reservation: time is not within the available hours of the resource.")
+    elif reserved:
+        messages.error(request, "Make a reservation: time has already been reserved.")
     else:
         new_reservation.save()
         current_resource.last = datetime.datetime.now()
