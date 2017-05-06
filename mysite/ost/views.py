@@ -88,13 +88,13 @@ def get_user(request, username=None):
 
 def create_resource(request):
     new_resource = Resource()
-    new_resource.created = datetime.datetime.now()
+    new_resource.created = datetime.datetime.now() + datetime.timedelta(hours=-4)
     new_resource.owner = users.get_current_user()
     new_resource.name = request.POST['name'].title()
     new_resource.start = request.POST['start']
     new_resource.end = request.POST['end']
     new_resource.description = request.POST['description']
-    new_resource.last = datetime.datetime.now()
+    new_resource.last = datetime.datetime.now() + datetime.timedelta(hours=-4)
     if new_resource.name and new_resource.start and new_resource.end:
         new_resource.save()
         tags = request.POST['tags'].replace(" ", "").split(",")
@@ -143,7 +143,7 @@ def update_resource(request, resource_id=None):
 def create_reservation(request, resource_id=None):
     current_resource = get_object_or_404(Resource, pk=resource_id)
     new_reservation = Reservation()
-    new_reservation.created = datetime.datetime.now()
+    new_reservation.created = datetime.datetime.now() + datetime.timedelta(hours=-4)
     new_reservation.owner = users.get_current_user()
     new_reservation.resource = current_resource
     new_reservation.time = request.POST['time']
@@ -199,7 +199,7 @@ def create_reservation(request, resource_id=None):
         messages.error(request, "Make a reservation: time has already been reserved.")
     else:
         new_reservation.save()
-        current_resource.last = datetime.datetime.now()
+        current_resource.last = datetime.datetime.now() + datetime.timedelta(hours=-4)
         current_resource.save()
         messages.success(request, "Make a reservation: success.")
     return redirect(request.META.get('HTTP_REFERER'))
