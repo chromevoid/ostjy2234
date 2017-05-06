@@ -19,23 +19,15 @@ import datetime
 def index(request):
     my_reservation_list = Reservation.objects.filter(
         owner=users.get_current_user(),
-    )
-    resource_list = Resource.objects.all().order_by('last')
-    tag_lists = []
-    for r in resource_list:
-        tag_lists.append(list(r.tags.all()))
+    ).order_by('time')
+    resource_list = Resource.objects.all().order_by('-last')
     my_resource_list = Resource.objects.filter(
         owner=users.get_current_user(),
-    ).order_by('last')
-    my_tag_lists = []
-    for r in my_resource_list:
-        my_tag_lists.append(list(r.tags.all()))
+    )
     return render(request, 'landing.html', {
         'my_reservation_list': my_reservation_list,
         'resource_list': resource_list,
-        'tag_lists': tag_lists,
         'my_resource_list': my_resource_list,
-        'my_tag_lists': my_tag_lists,
     })
 
 
@@ -49,16 +41,17 @@ def resource(request, resource_id=None):
         owner=users.get_current_user(),
         pk=resource_id,
     )
-    tag_list = []
-    for r in my_resource:
-        tag_list = list(r.tags.all())
-    tag_list_string = ""
-    for tag in tag_list:
-        tag_list_string = tag_list_string + str(tag.name) + ", "
-    tag_list_string = tag_list_string[:len(tag_list_string)-2]
     edit = False
+    tag_list_string = ""
     if len(my_resource) != 0:
         edit = True
+        tag_list = []
+        # Actually, this for-loop always has only one loop
+        for r in my_resource:
+            tag_list = list(r.tags.all())
+        for tag in tag_list:
+            tag_list_string = tag_list_string + str(tag.name) + ", "
+        tag_list_string = tag_list_string[:len(tag_list_string) - 2]
     reservation_list = Reservation.objects.filter(
         resource=current_resource,
     )
@@ -97,7 +90,7 @@ def create_resource(request):
     new_resource = Resource()
     new_resource.created = datetime.datetime.now()
     new_resource.owner = users.get_current_user()
-    new_resource.name = request.POST['name']
+    new_resource.name = request.POST['name'].title()
     new_resource.start = request.POST['start']
     new_resource.end = request.POST['end']
     new_resource.description = request.POST['description']
@@ -105,6 +98,7 @@ def create_resource(request):
     new_resource.save()
     tags = request.POST['tags'].replace(" ", "").split(",")
     for tag in tags:
+        tag = tag.title()
         old_tag = Tag.objects.filter(name=tag)
         if len(old_tag) == 0:
             new_tag = Tag()
@@ -119,7 +113,7 @@ def create_resource(request):
 
 def update_resource(request, resource_id=None):
     current_resource = get_object_or_404(Resource, pk=resource_id)
-    current_resource.name = request.POST['name']
+    current_resource.name = request.POST['name'].title()
     current_resource.start = request.POST['start']
     current_resource.end = request.POST['end']
     current_resource.description = request.POST['description']
@@ -127,6 +121,7 @@ def update_resource(request, resource_id=None):
     current_resource.tags.clear()
     tags = request.POST['tags'].replace(" ", "").split(",")
     for tag in tags:
+        tag = tag.title()
         old_tag = Tag.objects.filter(name=tag)
         if len(old_tag) == 0:
             new_tag = Tag()
@@ -163,5 +158,5 @@ def create_reservation(request, resource_id=None):
 def delete_reservation(request, reservation_id=None):
     current_reservation = get_object_or_404(Reservation, pk=reservation_id)
     current_reservation.delete()
-    messages.sucess(request, "Delete a reservation: success")
+    messages.success(request, "Delete a reservation: success")
     return redirect(request.META.get('HTTP_REFERER'))

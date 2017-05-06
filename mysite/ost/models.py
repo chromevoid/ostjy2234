@@ -51,4 +51,6 @@ class Reservation(models.Model):
         max_length=100,
         validators=[MaxLengthValidator(100)]
     )
-    duration = models.IntegerField(default=0)
+    duration = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(24)]
+    )
