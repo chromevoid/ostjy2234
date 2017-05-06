@@ -95,19 +95,22 @@ def create_resource(request):
     new_resource.end = request.POST['end']
     new_resource.description = request.POST['description']
     new_resource.last = datetime.datetime.now()
-    new_resource.save()
-    tags = request.POST['tags'].replace(" ", "").split(",")
-    for tag in tags:
-        tag = tag.title()
-        old_tag = Tag.objects.filter(name=tag)
-        if len(old_tag) == 0:
-            new_tag = Tag()
-            new_tag.name = tag
-            new_tag.save()
-            new_resource.tags.add(new_tag)
-        else:
-            new_resource.tags.add(Tag.objects.filter(name=tag)[:1].get())
-    messages.success(request, "Create a resource: success")
+    if new_resource.name and new_resource.start and new_resource.end:
+        new_resource.save()
+        tags = request.POST['tags'].replace(" ", "").split(",")
+        for tag in tags:
+            tag = tag.title()
+            old_tag = Tag.objects.filter(name=tag)
+            if len(old_tag) == 0:
+                new_tag = Tag()
+                new_tag.name = tag
+                new_tag.save()
+                new_resource.tags.add(new_tag)
+            else:
+                new_resource.tags.add(Tag.objects.filter(name=tag)[:1].get())
+        messages.success(request, "Create a resource: success.")
+    else:
+        messages.error(request, "Create a resource: please enter the name, start time, and end time.")
     return redirect(request.META.get('HTTP_REFERER'))
 
 
@@ -117,20 +120,23 @@ def update_resource(request, resource_id=None):
     current_resource.start = request.POST['start']
     current_resource.end = request.POST['end']
     current_resource.description = request.POST['description']
-    current_resource.save()
-    current_resource.tags.clear()
-    tags = request.POST['tags'].replace(" ", "").split(",")
-    for tag in tags:
-        tag = tag.title()
-        old_tag = Tag.objects.filter(name=tag)
-        if len(old_tag) == 0:
-            new_tag = Tag()
-            new_tag.name = tag
-            new_tag.save()
-            current_resource.tags.add(new_tag)
-        else:
-            current_resource.tags.add(Tag.objects.filter(name=tag)[:1].get())
-    messages.success(request, "Update a resource: success")
+    if current_resource.name and current_resource.start and current_resource.end:
+        current_resource.save()
+        current_resource.tags.clear()
+        tags = request.POST['tags'].replace(" ", "").split(",")
+        for tag in tags:
+            tag = tag.title()
+            old_tag = Tag.objects.filter(name=tag)
+            if len(old_tag) == 0:
+                new_tag = Tag()
+                new_tag.name = tag
+                new_tag.save()
+                current_resource.tags.add(new_tag)
+            else:
+                current_resource.tags.add(Tag.objects.filter(name=tag)[:1].get())
+        messages.success(request, "Update a resource: success.")
+    else:
+        messages.error(request, "Update a resource: please enter the name, start time, and end time.")
     return redirect(request.META.get('HTTP_REFERER'))
 
 
@@ -142,21 +148,41 @@ def create_reservation(request, resource_id=None):
     new_reservation.resource = current_resource
     new_reservation.time = request.POST['time']
     new_reservation.duration = request.POST['duration']
-
-    new_reservation_time, minute_reservation = request.POST['time'].split(":")
-    current_resource_end, minute_resource = current_resource.end.split(":")
-    if int(new_reservation_time) + int(request.POST['duration']) >= int(current_resource_end):
-        messages.error(request, "Make a reservation: time is not within the available hours of the resource")
+    # check time is within the available hours of the resource
+    time_reservation, sign_reservation = request.POST['time'].split(" ")
+    time_resource_start, sign_resource_start = current_resource.start.split(" ")
+    time_resource_end, sign_resource_end = current_resource.end.split(" ")
+    hour_reservation, minute_reservation = time_reservation.split(":")
+    hour_resource_start, minute_resource_start = time_resource_start.split(":")
+    hour_resource_end, minute_resource_end = time_resource_end.split(":")
+    if sign_reservation == "PM":
+        hour_reservation = int(hour_reservation) + 12
+    else:
+        hour_reservation = int(hour_reservation) if int(hour_reservation) != 12 else 0
+    if sign_resource_start == "PM":
+        hour_resource_start = int(hour_resource_start) + 12
+    else:
+        hour_resource_start = int(hour_resource_start) if int(hour_reservation) != 12 else 0
+    if sign_resource_end == "PM":
+        hour_resource_end = int(hour_resource_end) + 12
+    else:
+        hour_resource_end = int(hour_resource_end) if int(hour_reservation) != 12 else 0
+    compare_reservation_start = hour_reservation * 60 + int(minute_reservation)
+    compare_reservation_end = hour_reservation * 60 + int(minute_reservation) + int(request.POST['duration']) * 60
+    compare_resource_start = hour_resource_start * 60 + int(minute_resource_start)
+    compare_resource_end = hour_resource_end * 60 + int(minute_resource_end)
+    if compare_reservation_start < compare_resource_start or compare_reservation_end > compare_resource_end:
+        messages.error(request, "Make a reservation: time is not within the available hours of the resource.")
     else:
         new_reservation.save()
         current_resource.last = datetime.datetime.now()
         current_resource.save()
-        messages.success(request, "Make a reservation: success")
+        messages.success(request, "Make a reservation: success.")
     return redirect(request.META.get('HTTP_REFERER'))
 
 
 def delete_reservation(request, reservation_id=None):
     current_reservation = get_object_or_404(Reservation, pk=reservation_id)
     current_reservation.delete()
-    messages.success(request, "Delete a reservation: success")
+    messages.success(request, "Delete a reservation: success.")
     return redirect(request.META.get('HTTP_REFERER'))
