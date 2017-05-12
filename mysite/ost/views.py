@@ -170,7 +170,11 @@ def create_reservation(request, resource_id=None):
     new_reservation.owner = users.get_current_user()
     new_reservation.resource = current_resource
     new_reservation.time = request.POST['time']
-    new_reservation.duration = request.POST['duration']
+    new_reservation.duration = int(request.POST['duration'])
+
+    if new_reservation.duration <= 0:
+        messages.error(request, "Make a reservation: duration must be greater than 0")
+        return redirect(request.META.get('HTTP_REFERER'))
 
     # check time is within the available hours of the resource
     time_reservation, sign_reservation = request.POST['time'].split(" ")
@@ -196,7 +200,7 @@ def create_reservation(request, resource_id=None):
     compare_resource_start = hour_resource_start * 60 + int(minute_resource_start)
     compare_resource_end = hour_resource_end * 60 + int(minute_resource_end)
 
-    # check available
+    # check this resource is available and not booked by other people at this time
     reservation_list = Reservation.objects.filter(
         resource=current_resource,
     )
@@ -215,6 +219,8 @@ def create_reservation(request, resource_id=None):
         else:
             reserved = True
             break
+
+    # check user available
 
     if compare_reservation_start < compare_resource_start or compare_reservation_end > compare_resource_end:
         messages.error(request, "Make a reservation: time is not within the available hours of the resource.")
