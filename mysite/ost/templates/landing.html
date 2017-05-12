@@ -6,7 +6,7 @@
 
 {% block content %}
 <div class="page-header">
-    <h1>Home</h1>
+    <h1>Home <small>Time: {{ hour }} : {{ minute }}</small></h1>
 </div>
 <div class="row">
     <div class="col-md-4">
@@ -14,7 +14,15 @@
             <div class="panel-heading">Your Reservations</div>
             <div class="panel-body">
                 {% include "message.html" %}
-                {% for reservation in my_reservation_list %}
+                {% for reservation in am_helper_list %}
+                {% include "show_reservation_info.html" %}
+                <form class="form-horizontal" action="{% url 'delete_reservation' reservation.id %}"
+                      method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-default" style="margin-top: -12px; margin-bottom: 5%;">Delete</button>
+                </form>
+                {% endfor %}
+                {% for reservation in pm_helper_list %}
                 {% include "show_reservation_info.html" %}
                 <form class="form-horizontal" action="{% url 'delete_reservation' reservation.id %}"
                       method="post">

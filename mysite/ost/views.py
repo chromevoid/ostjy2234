@@ -24,10 +24,33 @@ def index(request):
     my_resource_list = Resource.objects.filter(
         owner=users.get_current_user(),
     )
+    # to order the time correctly and ignore reservations that pass the time
+    current = (datetime.datetime.now() + datetime.timedelta(hours=-4)).strftime('%H:%M')
+    current_hour, current_minute = current.split(":")
+    current_time_in_minutes = int(current_hour) * 60 + int(current_minute)
+    am_helper_list = []
+    pm_helper_list = []
+    for reservation in my_reservation_list:
+        time, sign = reservation.time.split(" ")
+        hour, minute = time.split(":")
+        if sign == "AM":
+            hour = int(hour) if int(hour) != 12 else 0
+            end = hour * 60 + int(minute) + int(reservation.duration) * 60
+            if current_time_in_minutes <= end:
+                am_helper_list.append(reservation)
+        else:
+            hour = int(hour) + 12
+            end = hour * 60 + int(minute) + int(reservation.duration) * 60
+            if current_time_in_minutes <= end:
+                pm_helper_list.append(reservation)
     return render(request, 'landing.html', {
         'my_reservation_list': my_reservation_list,
         'resource_list': resource_list,
         'my_resource_list': my_resource_list,
+        'hour': current_hour,
+        'minute': current_minute,
+        'am_helper_list': am_helper_list,
+        'pm_helper_list': pm_helper_list,
     })
 
 
