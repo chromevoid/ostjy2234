@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^resource/update/(?P<resource_id>\d+)$', views.update_resource, name='update_resource'),
     url(r'^resource/create/(?P<resource_id>\d+)$', views.create_reservation, name='create_reservation'),
     url(r'^reservation/delete/(?P<reservation_id>\d+)$', views.delete_reservation, name='delete_reservation'),
+    url(r'^resource/feed/(?P<resource_id>\d+)$', views.ResourceReservationFeed(), name='resource_feed')
 ]

@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
-from django.shortcuts import render, get_object_or_404, redirect
-
-from django.http import HttpResponse
-
 from .models import *
 from django.contrib import messages
-
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.syndication.views import Feed
 from google.appengine.api import users
 
 import datetime
@@ -239,3 +235,27 @@ def delete_reservation(request, reservation_id=None):
     current_reservation.delete()
     messages.success(request, "Delete a reservation: success.")
     return redirect(request.META.get('HTTP_REFERER'))
+
+
+# Follow the demo on https://docs.djangoproject.com/en/1.11/ref/contrib/syndication/
+class ResourceReservationFeed(Feed):
+    def get_object(self, request, resource_id):
+        return get_object_or_404(Resource, pk=resource_id)
+
+    def link(self, obj):
+        return "Resource link"
+
+    def title(self, obj):
+        return "Reservation of %s" % obj.name
+
+    def items(self, obj):
+        return Reservation.objects.filter(resource=obj)
+
+    def item_link(self, item):
+        return "Reservation link."
+
+    def item_title(self, item):
+        return "Title (TBD)"
+
+    def item_description(self, item):
+        return "{0} : {1} - {2}".format(item.owner, item.time, item.duration)
