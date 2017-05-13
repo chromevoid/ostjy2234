@@ -1,0 +1,50 @@
+URL: https://ostjy2234.appspot.com/
+
+1. Log in
+The system handles multiple users and each user is able to create resources or reserve them. You should log in to use the system.
+
+2. Homepage
+On the homepage, you can see three sections: 
+(1) reservations made for resources by you, sorted by reservation time, and each reservation has a button to delete it;
+(2) all resources in the system, shown in reverse time order based on the last-made reservation;
+(3) resources that you own, together with a link to create a new resource.
+
+3. Create a New Resource
+A new resource must have a name, a start time, and an end time.  You should enter a name and choose these two times from the drop-down list. If the name and the time are missing, or the start time is not earlier than the end time, error messages will occur. The tags field and description field are optional. If you want to enter tags, please use commas to separate the tags.
+
+4. About User
+Each user has a URL: anywhere a username is shown, the username is linked to the corresponding URL.
+On the user page, you can see all the reservations made by that user and all the resources owned by that user.
+
+5. About Resource
+Each resource has a URL: anywhere a resource name is shown, the name is linked to the corresponding URL.
+On the resource page, you can make a new reservation and see the current and upcoming reservations for this resource. If you are the owner of this resource, you can also edit the information about the resource. When editing, the previously entered information about the resources is shown as default values. 
+
+Resource Display
+  Resource Name (A link)
+  Start time - End time
+  Description
+  Tags
+  RSS (A link that dumps all reservations for that resource in XML format)
+
+6. About Reservation
+Reservations can be made by specifying a start time and a duration for the resource with the following three rules:
+(1) the reservations can't span a day boundary;
+(2) the duration should be an integer greater than 0; 
+however, if you enter a decimal, the greatest integer less than this decimal will be used for the duration;
+(3) if the time is already reserved by other users or the resource is not available for the time, an error message will occur.
+Also, once the end time (time + duration) for a reservation has passed, it won't be shown anymore in any view.
+
+7. Reservation Display
+  Resource Name (A link)
+  User who made this reservation (A link)
+  Time
+  Duration
+
+8. About Tags
+Each tag has a URL: anywhere a tag name is shown, the name is linked to the corresponding URL.
+On the tag page, you can see all the resources that have this tag. All tags are displayed in the title format, e.g. Book. 
+
+9. Additional
+(1) When showing a resource, show how many times it has been reserved in the past.
+

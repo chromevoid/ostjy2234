@@ -305,6 +305,7 @@ def create_reservation(request, resource_id=None):
     else:
         new_reservation.save()
         current_resource.last = datetime.datetime.now() + datetime.timedelta(hours=-4)
+        current_resource.reservation_count = current_resource.reservation_count + 1
         current_resource.save()
         messages.success(request, "Make a reservation: success.")
     return redirect(request.META.get('HTTP_REFERER'))

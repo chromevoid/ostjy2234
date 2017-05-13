@@ -38,6 +38,7 @@ class Resource(models.Model):
     )
     tags = models.ManyToManyField(Tag)
     last = models.DateTimeField()
+    reservation_count = models.IntegerField(default=0)
 
 
 class Reservation(models.Model):
