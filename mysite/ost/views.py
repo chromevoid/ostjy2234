@@ -74,11 +74,34 @@ def resource(request, resource_id=None):
     reservation_list = Reservation.objects.filter(
         resource=current_resource,
     )
+    # to order the time correctly and ignore reservations that pass the time
+    current = (datetime.datetime.now() + datetime.timedelta(hours=-4)).strftime('%H:%M')
+    current_hour, current_minute = current.split(":")
+    current_time_in_minutes = int(current_hour) * 60 + int(current_minute)
+    am_helper_list = []
+    pm_helper_list = []
+    for reservation in reservation_list:
+        time, sign = reservation.time.split(" ")
+        hour, minute = time.split(":")
+        if sign == "AM":
+            hour = int(hour) if int(hour) != 12 else 0
+            end = hour * 60 + int(minute) + int(reservation.duration) * 60
+            if current_time_in_minutes <= end:
+                am_helper_list.append(reservation)
+        else:
+            hour = int(hour) + 12
+            end = hour * 60 + int(minute) + int(reservation.duration) * 60
+            if current_time_in_minutes <= end:
+                pm_helper_list.append(reservation)
     return render(request, 'resource.html', {
         'resource': current_resource,
         'tag_list_string': tag_list_string,
         'edit': edit,
         'reservation_list': reservation_list,
+        'hour': current_hour,
+        'minute': current_minute,
+        'am_helper_list': am_helper_list,
+        'pm_helper_list': pm_helper_list,
     })
 
 
@@ -98,10 +121,33 @@ def get_user(request, username=None):
     reservation_list = Reservation.objects.filter(
         owner=username,
     )
+    # to order the time correctly and ignore reservations that pass the time
+    current = (datetime.datetime.now() + datetime.timedelta(hours=-4)).strftime('%H:%M')
+    current_hour, current_minute = current.split(":")
+    current_time_in_minutes = int(current_hour) * 60 + int(current_minute)
+    am_helper_list = []
+    pm_helper_list = []
+    for reservation in reservation_list:
+        time, sign = reservation.time.split(" ")
+        hour, minute = time.split(":")
+        if sign == "AM":
+            hour = int(hour) if int(hour) != 12 else 0
+            end = hour * 60 + int(minute) + int(reservation.duration) * 60
+            if current_time_in_minutes <= end:
+                am_helper_list.append(reservation)
+        else:
+            hour = int(hour) + 12
+            end = hour * 60 + int(minute) + int(reservation.duration) * 60
+            if current_time_in_minutes <= end:
+                pm_helper_list.append(reservation)
     return render(request, 'user.html', {
         'username': username,
         'resource_list': resource_list,
         'reservation_list': reservation_list,
+        'hour': current_hour,
+        'minute': current_minute,
+        'am_helper_list': am_helper_list,
+        'pm_helper_list': pm_helper_list,
     })
 
 
@@ -114,6 +160,23 @@ def create_resource(request):
     new_resource.end = request.POST['end']
     new_resource.description = request.POST['description']
     new_resource.last = datetime.datetime.now() + datetime.timedelta(hours=-4)
+    # check start and end time
+    time_start, sign_start = request.POST['start'].split(" ")
+    time_end, sign_end = request.POST['end'].split(" ")
+    hour_start, minute_start = time_start.split(":")
+    hour_end, minute_end = time_end.split(":")
+    if sign_start == "PM":
+        hour_start = int(hour_start) + 12
+    else:
+        hour_start = int(hour_start) if int(hour_start) != 12 else 0
+    if sign_end == "PM":
+        hour_end = int(hour_end) + 12
+    else:
+        hour_end = int(hour_end) if int(hour_end) != 12 else 0
+    if hour_end <= hour_start:
+        messages.error(request, "Create a resource: the start time should be before the end time.")
+        return redirect(request.META.get('HTTP_REFERER'))
+
     if new_resource.name and new_resource.start and new_resource.end:
         new_resource.save()
         tags = request.POST['tags'].replace(" ", "").split(",")
@@ -139,6 +202,23 @@ def update_resource(request, resource_id=None):
     current_resource.start = request.POST['start']
     current_resource.end = request.POST['end']
     current_resource.description = request.POST['description']
+    # check start and end time
+    time_start, sign_start = request.POST['start'].split(" ")
+    time_end, sign_end = request.POST['end'].split(" ")
+    hour_start, minute_start = time_start.split(":")
+    hour_end, minute_end = time_end.split(":")
+    if sign_start == "PM":
+        hour_start = int(hour_start) + 12
+    else:
+        hour_start = int(hour_start) if int(hour_start) != 12 else 0
+    if sign_end == "PM":
+        hour_end = int(hour_end) + 12
+    else:
+        hour_end = int(hour_end) if int(hour_end) != 12 else 0
+    if hour_end <= hour_start:
+        messages.error(request, "Update a resource: the start time should be before the end time.")
+        return redirect(request.META.get('HTTP_REFERER'))
+
     if current_resource.name and current_resource.start and current_resource.end:
         current_resource.save()
         current_resource.tags.clear()

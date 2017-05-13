@@ -15,7 +15,10 @@
         <div class="panel panel-default">
             <div class="panel-heading">Reservations</div>
             <div class="panel-body">
-                {% for reservation in reservation_list %}
+                {% for reservation in am_helper_list %}
+                {% include "show_reservation_info.html" %}
+                {% endfor %}
+                {% for reservation in pm_helper_list %}
                 {% include "show_reservation_info.html" %}
                 {% endfor %}
             </div>
