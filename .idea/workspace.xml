@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="93da1b2f-b6eb-4050-93d0-b705031e978e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mysite/ost/templates/landing.html" afterPath="$PROJECT_DIR$/mysite/ost/templates/landing.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mysite/ost/templates/show_resource_info.html" afterPath="$PROJECT_DIR$/mysite/ost/templates/show_resource_info.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ostjy2234.txt" afterPath="$PROJECT_DIR$/ostjy2234.txt" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -37,11 +34,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="landing.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="landing.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mysite/ost/templates/landing.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="57" lean-forward="false" selection-start-line="8" selection-start-column="57" selection-end-line="8" selection-end-column="57" />
+            <state relative-caret-position="180">
+              <caret line="12" column="41" lean-forward="true" selection-start-line="12" selection-start-column="41" selection-end-line="12" selection-end-column="41" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="show_resource_info.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/mysite/ost/templates/show_resource_info.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="7" column="116" lean-forward="false" selection-start-line="7" selection-start-column="116" selection-end-line="7" selection-end-column="116" />
               <folding />
             </state>
           </provider>
@@ -100,8 +107,8 @@
         <option value="$PROJECT_DIR$/mysite/ost/views.py" />
         <option value="$PROJECT_DIR$/mysite/ost/templates/resource.html" />
         <option value="$PROJECT_DIR$/mysite/ost/templates/base.html" />
-        <option value="$PROJECT_DIR$/mysite/ost/templates/show_resource_info.html" />
         <option value="$PROJECT_DIR$/mysite/ost/templates/landing.html" />
+        <option value="$PROJECT_DIR$/mysite/ost/templates/show_resource_info.html" />
       </list>
     </option>
   </component>
@@ -708,14 +715,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mysite/ost/templates/show_resource_info.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="115" lean-forward="false" selection-start-line="7" selection-start-column="115" selection-end-line="7" selection-end-column="115" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mysite/ost/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -728,8 +727,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/mysite/ost/templates/landing.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="57" lean-forward="false" selection-start-line="8" selection-start-column="57" selection-end-line="8" selection-end-column="57" />
+        <state relative-caret-position="180">
+          <caret line="12" column="41" lean-forward="true" selection-start-line="12" selection-start-column="41" selection-end-line="12" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mysite/ost/templates/show_resource_info.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="116" lean-forward="false" selection-start-line="7" selection-start-column="116" selection-end-line="7" selection-end-column="116" />
           <folding />
         </state>
       </provider>
