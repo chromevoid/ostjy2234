@@ -1,12 +1,14 @@
+https://ostjy2234.appspot.com/
+
+Log
+
+
+
 Any information the grader will need to be able to properly test your assignment. If a feature is not obvious, it may be overlooked unless you explain it properly.
 
-1. The system handles multiple users and each user is able to create resources or reserve them.
+The system should handle multiple users and each user should be able to create resources or reserve them.
 
-2. On the landing page, viewers can see three sections: 
-	(1) reservations made for resources by that user, sorted by reservation time; 
-	(2) all resources in the system, shown in reverse time order based on last made reservation; 
-	(3) resources that the user owns, each linked to its URL;
-	(4) a link to create a new resource.
+2. On the landing page, viewers will see three sections: (1) reservations made for resources by that user, sorted by reservation time; (2) all resources in the system, shown in reverse time order based on last made reservation; (3) resources that the user owns, each linked to its URL; and (4) a link to create a new resource.
 
 3. Once the end time for a reservation has passed, it should not be shown anymore in any view.
 
