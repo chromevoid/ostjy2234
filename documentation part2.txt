@@ -1,4 +1,5 @@
 A developers guide that explains how the project is designed and coded.
+GitHub: https://github.com/chromevoid/ostjy2234
 
 Important files:
   ost
