@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.syndication.views import Feed
 from google.appengine.api import users
+from google.appengine.api import mail
 
 import datetime
 
@@ -297,15 +298,41 @@ def create_reservation(request, resource_id=None):
             break
 
     # check user available
+    my_reservation_list = Reservation.objects.filter(
+        owner=users.get_current_user()
+    )
+    no_time = False
+    for reservation in my_reservation_list:
+        time, sign = reservation.time.split(" ")
+        hour, minute = time.split(":")
+        if sign == "PM":
+            hour = int(hour) + 12
+        else:
+            hour = int(hour) if int(hour) != 12 else 0
+        start = hour * 60 + int(minute)
+        end = start + int(reservation.duration) * 60
+        if compare_reservation_start >= end or compare_reservation_end <= start:
+            continue
+        else:
+            no_time = True
+            break
 
     if compare_reservation_start < compare_resource_start or compare_reservation_end > compare_resource_end:
         messages.error(request, "Make a reservation: time is not within the available hours of the resource.")
     elif reserved:
         messages.error(request, "Make a reservation: time has already been reserved.")
+    elif no_time:
+        messages.error(request, "Make a reservation: you have other reservations at this time.")
     else:
         new_reservation.save()
         current_resource.last = datetime.datetime.now() + datetime.timedelta(hours=-4)
         current_resource.reservation_count = current_resource.reservation_count + 1
+
+        mail.send_mail(sender="JY <chromevoid500@gmail.com>",
+                       to=users.get_current_user().email(),
+                       subject="Your reservation has been made",
+                       body="Hi:\n\nYou just made a new reservation.\nResource Name: " + new_reservation.resource.name + "\nTime: " + new_reservation.time + "\nDuration " + str(new_reservation.duration) + "\n\nJY"
+                       )
         current_resource.save()
         messages.success(request, "Make a reservation: success.")
     return redirect(request.META.get('HTTP_REFERER'))

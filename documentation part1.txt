@@ -47,4 +47,5 @@ On the tag page, you can see all the resources that have this tag. All tags are 
 
 9. Additional
 (1) When showing a resource, show how many times it has been reserved in the past.
-
+(2) When reservations are made, an email confirmation would be sent to a user.
+(3) Support a requirement where a user can only have one reservation at a time. The system would not allow a reservation to be made if it overlaps with another one made by the same user.
