@@ -6,9 +6,46 @@
 
 {% block content %}
 <div class="page-header">
-    <h1>Home <small><span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{ hour }} : {{ minute }}</small></h1>
+    <h1><a href="{% url 'index' %}">Home</a>
+        <small><span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{ hour }} : {{ minute }}</small>
+    </h1>
 </div>
 <div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form class="form-inline" style="margin-bottom: 15px" action="{% url 'search_by_name'%}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="search_by_name" placeholder="Resource name">
+                    </div>
+                    <button type="submit" class="btn btn-default">Search</button>
+                </form>
+                <form class="form-inline" style="margin-bottom: 15px" action="{% url 'search_by_time'%}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" class="form-control timepicker" name="time"
+                               placeholder="Time e.g. 6:00 AM">
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="duration"
+                                   placeholder="Duration e.g. 3" aria-describedby="sizing-addon"
+                                   style="z-index: 0;">
+                            <span class="input-group-addon" id="sizing-addon">Hours</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-default">Search</button>
+                </form>
+                {% for resource in name_results %}
+                {% include "show_resource_info.html" %}
+                {% endfor %}
+                {% for resource in time_results %}
+                {% include "show_resource_info.html" %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
     <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading">Your Reservations</div>
@@ -19,7 +56,8 @@
                 <form class="form-horizontal" action="{% url 'delete_reservation' reservation.id %}"
                       method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-default" style="margin-top: -12px; margin-bottom: 5%;">Delete</button>
+                    <button type="submit" class="btn btn-default" style="margin-top: -12px; margin-bottom: 5%;">Delete
+                    </button>
                 </form>
                 {% endfor %}
                 {% for reservation in pm_helper_list %}
@@ -27,7 +65,8 @@
                 <form class="form-horizontal" action="{% url 'delete_reservation' reservation.id %}"
                       method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-default" style="margin-top: -12px; margin-bottom: 5%;">Delete</button>
+                    <button type="submit" class="btn btn-default" style="margin-top: -12px; margin-bottom: 5%;">Delete
+                    </button>
                 </form>
                 {% endfor %}
             </div>

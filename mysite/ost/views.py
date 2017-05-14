@@ -13,7 +13,7 @@ import datetime
 # Create your views here.
 
 
-def index(request):
+def index(request, name_results=[], time_results=[]):
     my_reservation_list = Reservation.objects.filter(
         owner=users.get_current_user(),
     ).order_by('time')
@@ -48,7 +48,56 @@ def index(request):
         'minute': current_minute,
         'am_helper_list': am_helper_list,
         'pm_helper_list': pm_helper_list,
+        'name_results': name_results,
+        'time_results': time_results,
     })
+
+
+def search_by_name(request):
+    name = request.POST['search_by_name'].lower()
+    resource_list = Resource.objects.all().order_by('-last')
+    show_resource_list = []
+    for r in resource_list:
+        if r.name.lower().find(name) >= 0:
+            show_resource_list.append(r)
+    return index(request, show_resource_list, [])
+
+
+def search_by_time(request):
+    search_duration = request.POST['duration']
+    search_time, search_sign = request.POST['time'].split(" ")
+    search_hour, search_minute = search_time.split(":")
+    if search_sign == "AM":
+        search_hour = int(search_hour) if int(search_hour) != 12 else 0
+    else:
+        search_hour = int(search_hour) + 12
+    search_start = search_hour * 60 + int(search_minute)
+    search_end = search_start + int(search_duration) * 60
+
+    resource_list = Resource.objects.all().order_by('-last')
+    resource_list_within_time = []
+    resource_list_avaible = []
+    for r in resource_list:
+        time_start, sign_start = r.start.split(" ")
+        hour_start, minute_start = time_start.split(":")
+        time_end, sign_end = r.end.split(" ")
+        hour_end, minute_end = time_end.split(":")
+        if sign_start == "AM":
+            hour_start = int(hour_start) if int(hour_start) != 12 else 0
+        else:
+            hour_start = int(hour_start) + 12
+        if sign_end == "AM":
+            hour_end = int(hour_end) if int(hour_end) != 12 else 0
+        else:
+            hour_end = int(hour_end) + 12
+        start = hour_start * 60 + int(minute_start)
+        end = hour_end * 60 + int(minute_end)
+        if search_end <= start or search_start >= end:
+            continue
+        else:
+            resource_list_avaible.append(r)
+
+    return index(request, [], resource_list_avaible)
 
 
 def new(request):
@@ -331,7 +380,8 @@ def create_reservation(request, resource_id=None):
         mail.send_mail(sender="JY <chromevoid500@gmail.com>",
                        to=users.get_current_user().email(),
                        subject="Your reservation has been made",
-                       body="Hi:\n\nYou just made a new reservation.\nResource Name: " + new_reservation.resource.name + "\nTime: " + new_reservation.time + "\nDuration " + str(new_reservation.duration) + "\n\nJY"
+                       body="Hi:\n\nYou just made a new reservation.\nResource Name: " + new_reservation.resource.name + "\nTime: " + new_reservation.time + "\nDuration " + str(
+                           new_reservation.duration) + "\n\nJY"
                        )
         current_resource.save()
         messages.success(request, "Make a reservation: success.")
