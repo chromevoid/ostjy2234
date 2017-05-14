@@ -1,0 +1,155 @@
+A developers guide that explains how the project is designed and coded.
+
+Important files:
+  ost
+    templates
+      base.html: a base html conta
+      landing.html
+      message.html
+      new.html
+      resource.html
+      show_reservation_info.html
+      show_resource_info.html
+      tag.html
+      user.html
+    models.py
+    urls.py
+    views.py
+
+==== ==== ==== ==== ====
+1. base.html
+A parent HTML template containing basic elements. All the pages extend this base.html.
+
+==== ==== ==== ==== ====
+2. landing.html
+A page to show the homepage.
+
+==== ==== ==== ==== ====
+3. message.html
+A section used to show messages. If the display of the messages is needed, this section will be included.
+
+==== ==== ==== ==== ====
+4. new.html
+A page to create a new resource.
+
+==== ==== ==== ==== ====
+5. resource.html
+A page to view reservations, make reservations, and edit resource.
+
+==== ==== ==== ==== ====
+6. show_reservation_info.html
+A section used to show reservations. If the display of the reservsations is needed, this section will be included.
+
+==== ==== ==== ==== ====
+7. show_resource_info.html
+A section used to show resources. If the display of the resources is needed, this section will be included.
+
+==== ==== ==== ==== ====
+8. tag.html
+A page to view the all resources that have the tag specified.
+
+==== ==== ==== ==== ====
+9. user.html
+A page to view the reservations and resources owned by the user.
+
+==== ==== ==== ==== ====
+10. models.py
+Defines the database. There are three tables: tag, resource, reservation.
+
+Tag:
+  name - the name of the tag
+
+Resource: 
+  created - the time this resource is created
+  name - the name of the resource
+  description - the description of the resource
+  start - the start time of the resource
+  end - the end time of the resource
+  tags - the tags define the resource (this field is related to the Tag table)
+  last - the time when the last reservation is made
+  reservation_count - count the total reservations made in the past
+
+Reservation:
+  created - the time this reservation is created
+  owner - the user who make this reservation
+  resource - the resource reserved (this field is related to the Resource table)
+  time - the time of the reservation
+  duration - how long does this reservation last
+
+==== ==== ==== ==== ====
+11. urls.py
+Lists the urls needed for this project.
+Resource page, tag page, user page, and rss page need certain id to get the corresponding urls.
+The following urls are used for form actions: search_by_name, search_by_time, new/action, resource/update, resource/create, and reservation/delete.
+
+==== ==== ==== ==== ====
+12. views.py
+Takes Web requests and returns Web responses
+
+def index(request, name_results=[], time_results=[]):
+    # get the reservations made by the current user
+    # get the resources in the system
+    # get the resources owned by the current user
+    # order the time correctly and ignore reservations that pass the time
+    
+def search_by_name(request):
+    # get the search name
+    # get the resources in the system
+    # check the name of each resource
+    # if the search name is a substring of the resource name, then add the resource to the result_list
+    
+def search_by_time(request):
+    # get the fields, and convert HH:MM AM/PM to minutes
+    # get the resources in the system
+    # check if the the start time and end time of a resource is within the search time period
+    # if true, then add the resource to the result_list
+
+def new(request):
+    # a page containing the form to create a new resource
+
+def resource(request, resource_id=None):
+    # get current resource
+    # check if the current resource is owned by the current user
+    # and get the tags string so that the tag value can be shown as default value in the form
+    # get the reservations for current resource
+    # order the time correctly and ignore reservations that pass the time
+
+def get_resource(request, tag_id=None):
+    # use a certain tag to find all the resources that have this tag
+
+def get_user(request, username=None):
+    # fine the resources owned by a certain user
+    # find the reservation owned by a certain user
+    # to order the time correctly and ignore reservations that pass the time
+
+def create_resource(request):
+    # get the information about the new resource
+    # check start and end time, start time must be earlier than the end time
+    # deal with the tags
+    # if a tag doesn't exit in the Tag table
+    # then a new tag is created before is added to the new resource
+
+def update_resource(request, resource_id=None):
+    # get the information about the resource
+    # check start and end time, start time should be earlier than the end time
+    # check if the name, start time, and end time are entered since these fields are necessary
+    # if true, then deal with the tags
+    # if a tag doesn't exit in the Tag table, then a new tag is created before is added to the new resource
+
+def create_reservation(request, resource_id=None):
+    # first, get the resource that the user is making reservation for
+    # get the information of the reservation
+    # check if the duration is a integer greater than 0
+    # if a decimal is used, then the largest integer that is smaller than this decimal is used
+    # check time is within the available hours of the resource
+    # check this resource is available and not booked by other people at this time
+    # check user available
+    # check if this reservation should be made
+    # if true, then the resource also needs to be updated: the last field and the reservation_count field
+    # if success, a mail is sent to confirm that the reservation is made.
+
+def delete_reservation(request, reservation_id=None):
+    # get the current reservation and then delete
+
+class ResourceReservationFeed(Feed):
+    # Follow the demo on https://docs.djangoproject.com/en/1.11/ref/contrib/syndication/
